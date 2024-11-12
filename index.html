@@ -1,0 +1,28 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>감성네컷피드</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>감성네컷피드</h1>
+    <!-- 검색 폼 추가-->
+     <div class="search-container">
+        <input type="text" id="search-input" placeholder="검색어를 입력하세요">
+        <button id="search-button">검색</button>
+     </div>
+    <div class="gallery"></div>
+
+    <!-- 모달 창 -->
+    <div class="hidden" id="modalContainer">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalContent">
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
