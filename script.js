@@ -8,7 +8,8 @@ let currentIndex = 0;
 const gallery = document.querySelector('.gallery');
 //const modal = document.getElementById('image_modal');
 const modal=document.getElementById('modalContainer')
-const modalImage = document.getElementById('modalContent');
+const modalContent=document.getElementById('modalContent');
+const modalImage = document.getElementById('modalContentImage');
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 
@@ -22,11 +23,13 @@ async function getPhotos(query) {
         photosArray = data.results;
         if(photosArray.length === 0){
             gallery.innerHTML='<p>검색 결과가 없습니다.</p>';
+            closeModal();
         }else{
             displayPhotos();
         }  
     } catch (error) {
         console.error(error);
+        closeModal();
     }
 }
 
@@ -56,10 +59,16 @@ function displayPhotos() {
 
 // 모달 열기
 function openModal(event) {
-    currentIndex = Number(event.target.dataset.index);
-    modal.classList.remove('hidden')
+    console.log('openModal 함수 호출');
+    currentIndex = Number(event.currentTarget.dataset.index);
+    if (isNaN(currentIndex) || currentIndex < 0 || currentIndex >= photosArray.length) {
+        console.error(`Invalid currentIndex: ${currentIndex}`);
+        return;
+    }
+    modal.classList.remove('hidden'); // 'hidden' 클래스 제거하여 표시
     showModalImage();
     modalImage.focus();
+    //document.body.style.overflow='hidden';
 }
 
 // 모달에 이미지 표시
@@ -69,7 +78,7 @@ function showModalImage() {
 
 // 모달 닫기
 function closeModal() {
-    modalImage.classList.add('hidden');
+    modal.classList.add('hidden');
 }
 
 // 이전 이미지 보기
@@ -98,6 +107,13 @@ searchButton.addEventListener('click', () => {
 searchInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') {
         searchButton.click();
+    }
+});
+
+// 모달 외부 클릭 시 닫기
+modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        closeModal();
     }
 });
 

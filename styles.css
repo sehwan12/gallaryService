@@ -1,0 +1,164 @@
+/* styles.css */
+
+/* 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* 갤러리 레이아웃 */
+
+/* 갤러리 레이아웃 */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 한 행에 4개의 컬럼 */
+    gap: 2px;
+    padding: 0;
+}
+
+.gallery img {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* 정방형 비율 유지 */
+    object-fit: cover; /* 이미지가 정방형 영역을 완전히 채우도록 조정 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.gallery img:hover {
+    transform: scale(1.05);
+}
+
+/* 모달 스타일 */
+#modalContainer {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8); /* 배경 불투명도 조정 */
+    z-index: 1000; /* 높은 z-index로 설정 */
+}
+
+#modalContent {
+    background-color: #ffffff;
+    max-width: 90%;
+    max-height: 90%;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    overflow: hidden;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+}
+
+#modalContainer.hidden {
+    display: none;
+}
+
+/* 모달 내 이미지 스타일 */
+#modalContentImage {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* 이미지가 왜곡되지 않도록 조정 */
+    border-radius: 5px;
+}
+/* 이전/다음 버튼 스타일 개선 */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    color: #ffffff;
+    font-size: 50px;
+    padding: 10px;
+    margin-top: -25px;
+    user-select: none;
+    transition: color 0.3s;
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 추가 */
+    border-radius: 50%; /* 원형 버튼으로 변경 */
+}
+
+.prev::before, .next::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: transparent;
+}
+
+.prev:hover, .next:hover {
+    color: #dddddd;
+    background-color: rgba(0, 0, 0, 0.7); /* 호버 시 배경 불투명도 증가 */
+}
+
+.prev {
+    left: 20px; /* 왼쪽 여백 증가 */
+}
+
+.next {
+    right: 20px; /* 오른쪽 여백 증가 */
+}
+
+/* 닫기 버튼 스타일 개선 */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: #ffffff;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5); /* 텍스트 그림자 추가 */
+}
+
+.close:hover,
+.close:focus {
+    color: #bbbbbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.search-container{
+    text-align: center;
+    margin-bottom:20px;
+}
+
+#search-input {
+    width:300px;
+    padding:10px;
+    font-size:16px;
+}
+
+#search-button {
+    padding: 10px 20px;
+    font-size : 16px;
+    cursor: pointer;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 800px) {
+    .gallery img {
+        width: calc(50% - 10px);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .gallery img {
+        width: 100%;
+    }
+}

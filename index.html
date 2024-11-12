@@ -8,6 +8,14 @@
 </head>
 <body>
     <h1>감성네컷피드</h1>
+    <div class="hidden" id="modalContainer">
+        <div id="modalContent">
+            <span class="close" aria-label="모달 닫기">&times;</span>
+            <img class="modal-content" id="modalContentImage" alt="확대된 이미지">
+            <a class="prev" aria-label="이전 이미지">&#10094;</a>
+            <a class="next" aria-label="다음 이미지">&#10095;</a>
+        </div>
+    </div>
     <!-- 검색 폼 추가-->
      <div class="search-container">
         <input type="text" id="search-input" placeholder="검색어를 입력하세요">
@@ -15,13 +23,7 @@
      </div>
     <div class="gallery"></div>
 
-    <!-- 모달 창 -->
-    <div class="hidden" id="modalContainer">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="modalContent">
-        <a class="prev">&#10094;</a>
-        <a class="next">&#10095;</a>
-    </div>
+    
 
     <script src="script.js"></script>
 </body>
