@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지 - 감성네컷피드</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>감성네컷피드 - 마이페이지</h1>
+        
+        <!-- 탭 바 추가 -->
+        <nav class="tab-bar">
+            <ul>
+                <li><a href="index.html">사진 검색</a></li>
+                <li><a href="mypage.html" class="active">마이페이지</a></li>
+                <li><a href="make4cuts.html">네컷 만들기</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section>
+            <h2>좋아요한 사진</h2>
+            <div class="gallery" id="liked-gallery">
+                <!-- 좋아요한 사진이 여기에 표시됩니다 -->
+            </div>
+        </section>
+    </main>
+    
+    <!-- 모달 창 숨기기 (필요 시 주석 처리) -->
+    
+    <div class="hidden" id="modalContainer">
+        <div id="modalContent">
+            <span class="close" aria-label="모달 닫기">&times;</span>
+            <img class="modal-content" id="modalContentImage" alt="확대된 이미지">
+            <!-- 버튼 컨테이너 추가 -->
+            <div class="modal-buttons">
+                <button id="download-button" aria-label="이미지 다운로드">⬇️ 다운로드</button>
+                <button id="like-button" aria-label="좋아요 토글">♡</button>
+            </div>
+            <a class="prev" aria-label="이전 이미지">&#10094;</a>
+            <a class="next" aria-label="다음 이미지">&#10095;</a>
+        </div>
+    </div>
+   
+    
+    <script src="../script/mypage.js"></script>
+</body>
+</html>

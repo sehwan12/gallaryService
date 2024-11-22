@@ -3,15 +3,25 @@
 const apiKey = 'XZB6t3Awo2Ul_fGPYWCAJZ50u7-gcjlPa_MNSnD-vyw';  // 발급받은 Unsplash API 키로 교체하세요
 let photosArray = [];
 let currentIndex = 0;
+let likedPhotos = []; //좋아요한 사진 목록
 
 // DOM 요소 가져오기
 const gallery = document.querySelector('.gallery');
-//const modal = document.getElementById('image_modal');
 const modal=document.getElementById('modalContainer')
 const modalContent=document.getElementById('modalContent');
 const modalImage = document.getElementById('modalContentImage');
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
+const downloadButton= document.getElementById('download-button');
+const likeButton= document.getElementById('like-button');
+
+//로컬 스토리지에서 좋아요한 사진 불러오기
+document.addEventListener('DOMContentLoaded', ()=>{
+    const storedLikes=localStorage.getItem('likedPhotos');
+    if(storedLikes){
+        likedPhotos = JSON.parse(storedLikes);
+    }
+})
 
 // 이미지 데이터 가져오기
 async function getPhotos(query) {
@@ -67,6 +77,7 @@ function openModal(event) {
     }
     modal.classList.remove('hidden'); // 'hidden' 클래스 제거하여 표시
     showModalImage();
+    updateLikeButton();
     modalImage.focus();
     //document.body.style.overflow='hidden';
 }
@@ -85,12 +96,87 @@ function closeModal() {
 function showPrevImage() {
     currentIndex = (currentIndex - 1 + photosArray.length) % photosArray.length;
     showModalImage();
+    updateLikeButton();
 }
 
 // 다음 이미지 보기
 function showNextImage() {
     currentIndex = (currentIndex + 1) % photosArray.length;
     showModalImage();
+    updateLikeButton();
+}
+
+// 다운로드 버튼 클릭 이벤트 수정
+downloadButton.addEventListener('click', () => {
+    const photo = photosArray[currentIndex];
+    if (photo && photo.urls && photo.urls.full) {
+        const imageUrl = photo.urls.full;
+        // CORS 문제를 방지하기 위해 Blob을 사용한 다운로드 구현
+        fetch(imageUrl, {
+            mode: 'cors'
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `unsplash-${photo.id}.jpg`;  // 원하는 파일 이름으로 설정
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            console.log('Download initiated for:', imageUrl);
+        })
+        .catch(error => {
+            console.error('Error downloading the image:', error);
+            alert('이미지를 다운로드할 수 없습니다.');
+        });
+    } else {
+        alert('이미지를 다운로드할 수 없습니다.');
+    }
+});
+
+//하트 버튼 클릭 이벤트
+likeButton.addEventListener('click', ()=>{
+    toggleLikeButton();
+    updateLikeButton();
+})
+
+//하트 버튼 클릭 이벤트
+function updateLikeButton(){
+    if(isPhotoLiked()){
+        likeButton.classList.add('liked');
+        likeButton.textContent='❤️';
+    }else{
+        likeButton.classList.remove('liked');
+        likeButton.textContent='♡';
+    }
+}
+
+// 현재 사진이 좋아요 목록에 있는지 확인
+function isPhotoLiked() {
+    const photo = photosArray[currentIndex];
+    //
+    return likedPhotos.some(liked => liked.id === photo.id);
+}
+
+// 좋아요 토글 함수
+function toggleLikeButton() {
+    const photo = photosArray[currentIndex];
+    if (isPhotoLiked()) {
+        // 좋아요 목록에서 제거
+        likedPhotos = likedPhotos.filter(liked => liked.id !== photo.id);
+    } else {
+        // 좋아요 목록에 추가
+        likedPhotos.push({
+            id: photo.id,
+            url: photo.urls.small,
+            fullUrl: photo.urls.regular,
+            downloadLink: photo.links.download_location
+        });
+    }
+    // 로컬 스토리지에 저장
+    localStorage.setItem('likedPhotos', JSON.stringify(likedPhotos));
 }
 
 // 검색 버튼 클릭 이벤트
@@ -121,6 +207,25 @@ modal.addEventListener('click', (event) => {
 document.querySelector('.close').addEventListener('click', closeModal);
 document.querySelector('.prev').addEventListener('click', showPrevImage);
 document.querySelector('.next').addEventListener('click', showNextImage);
+
+// 키보드 이벤트로 모달 제어
+document.addEventListener('keydown', (event) => {
+    if (!modal.classList.contains('hidden')) { // 모달이 열려있는 경우
+        switch (event.key) {
+            case 'ArrowLeft':
+                showPrevImage();
+                break;
+            case 'ArrowRight':
+                showNextImage();
+                break;
+            case 'Escape':
+                closeModal();
+                break;
+            default:
+                break;
+        }
+    }
+});
 
 // 초기 함수 호출 (초기에는 인기 이미지를 표시)
 getPhotos('popular');
