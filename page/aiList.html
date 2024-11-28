@@ -1,0 +1,40 @@
+<!-- aiList.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사진쓰까-AI 이미지 목록</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>사진쓰까</h1>
+        <!-- 탭 바 추가 -->
+        <nav class="tab-bar">
+            <ul>
+                <li><a href="index.html">사진 검색</a></li>
+                <li><a href="mypage.html">좋아요</a></li>
+                <li><a href="makeImage.html">사진 만들기</a></li>
+                <li><a href="aiList.html" class="active">AI 이미지 목록</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="gallery" id="ai-gallery">
+            <!-- 생성된 AI 이미지들이 여기 표시됩니다 -->
+        </div>
+    </main>
+    
+    <!-- AI 이미지 모달 -->
+    <div class="hidden" id="modalContainer">
+        <div id="modalContent">
+            <span class="close" aria-label="모달 닫기">&times;</span>
+            <img class="modal-content" id="modalContentImage" alt="AI 생성 이미지">
+            <button id="download-ai-button" aria-label="AI 이미지 다운로드">⬇️ 다운로드</button>
+        </div>
+    </div>
+    
+    <script src="../script/aiList.js"></script>
+</body>
+</html>

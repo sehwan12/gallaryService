@@ -3,11 +3,11 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>감성네컷피드</title>
+    <title>사진쓰까</title>
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <h1>감성네컷피드</h1>
+    <h1>사진쓰까</h1>
     <header>
         <!-- 검색 폼 추가-->
         <div class="search-container">
@@ -18,8 +18,9 @@
         <nav class="tab-bar">
                 <ul>
                     <li><a href="index.html" class="active">사진 검색</a></li>
-                    <li><a href="mypage.html">마이페이지</a></li>
-                    <li><a href="make4cuts.html">네컷 만들기</a></li>
+                    <li><a href="mypage.html">좋아요</a></li>
+                    <li><a href="makeImage.html">사진 만들기</a></li>
+                    <li><a href="aiList.html">AI 이미지 목록</a></li>
                 </ul>
         </nav>
     </header>
@@ -32,6 +33,7 @@
         <div id="modalContent">
             <span class="close" aria-label="모달 닫기">&times;</span>
             <img class="modal-content" id="modalContentImage" alt="확대된 이미지">
+            <p id="modalDescription" class="modal-description"></p>
             <!-- 버튼 컨테이너 추가 -->
             <div class="modal-buttons">
                 <button id="download-button" aria-label="이미지 다운로드">⬇️ 다운로드</button>

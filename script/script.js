@@ -10,6 +10,7 @@ const gallery = document.querySelector('.gallery');
 const modal=document.getElementById('modalContainer')
 const modalContent=document.getElementById('modalContent');
 const modalImage = document.getElementById('modalContentImage');
+const modalDescription = document.getElementById('modalDescription'); 
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const downloadButton= document.getElementById('download-button');
@@ -75,6 +76,7 @@ function openModal(event) {
         console.error(`Invalid currentIndex: ${currentIndex}`);
         return;
     }
+  
     modal.classList.remove('hidden'); // 'hidden' 클래스 제거하여 표시
     showModalImage();
     updateLikeButton();
@@ -84,7 +86,10 @@ function openModal(event) {
 
 // 모달에 이미지 표시
 function showModalImage() {
-    modalImage.src = photosArray[currentIndex].urls.regular;
+    const photo=photosArray[currentIndex];
+    //modalImage.src = photosArray[currentIndex].urls.regular;
+    modalImage.src = photo.urls.regular;
+    modalDescription.textContent = photo.alt_description || photo.description || '설명이 없습니다.';
 }
 
 // 모달 닫기
@@ -170,10 +175,11 @@ function toggleLikeButton() {
         // 좋아요 목록에 추가
         likedPhotos.push({
             id: photo.id,
+            alt: photo.alt_description || photo.description || '이미지',
             url: photo.urls.small,
             fullUrl: photo.urls.regular,
             downloadLink: photo.links.download_location
-        });
+    });
     }
     // 로컬 스토리지에 저장
     localStorage.setItem('likedPhotos', JSON.stringify(likedPhotos));

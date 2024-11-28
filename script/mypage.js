@@ -1,13 +1,16 @@
 // mypage.js
 const modal = document.getElementById('modalContainer');
 const modalContentImage = document.getElementById('modalContentImage');
+const modalDescription = document.getElementById('modalDescription'); 
 const downloadButton = document.getElementById('download-button');
 const likeButton = document.getElementById('like-button');
 const likedGallery = document.getElementById('liked-gallery');
+const selectCheckbox= document.getElementById('select-checkbox');
 const storedLikes = localStorage.getItem('likedPhotos');
 const closeModalButton = document.querySelector('.close');
 
 let likedPhotos = [];
+let selectedPhotos = [];
 let currentIndex = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,6 +29,7 @@ function displayLikedPhotos() {
     likedPhotos.forEach((photo, index) => {
         const img = document.createElement('img');
         img.src = photo.url;
+        img.alt=photo.alt || '좋아요한 이미지';
         img.dataset.index = index;
         img.tabIndex = 0;  // 키보드 포커스 가능하도록 설정
         img.setAttribute('aria-label', '이미지 확대 보기');
@@ -63,6 +67,7 @@ function openModal() {
     modalContentImage.src = photo.fullUrl;
     modalContentImage.alt = photo.alt;
 
+    modalDescription.textContent = photo.alt;
     // 다운로드 버튼 설정
     downloadButton.onclick = () => {
         const imageUrl = photo.fullUrl;
@@ -99,6 +104,15 @@ function openModal() {
         console.log('Unlike button clicked');
     };
 
+    // 체크 버튼 상태 업데이트
+    updateSelectCheckbox();
+
+    // 체크박스 변경 이벤트
+    selectCheckbox.onclick = () => {
+        toggleSelectPhoto();
+        updateSelectCheckbox();
+    };
+
     // 모달 표시
     modal.classList.remove('hidden');
     modalContentImage.focus();
@@ -111,6 +125,7 @@ function closeModal() {
     modalContentImage.alt = ''; // alt 텍스트 초기화
     downloadButton.onclick = null;
     likeButton.onclick = null;
+    selectCheckbox.onclick=null;
 }
 
 
@@ -137,6 +152,28 @@ function removeLikePhoto(photoId) {
     localStorage.setItem('likedPhotos', JSON.stringify(likedPhotos));
 }
 
+// 체크박스 상태 업데이트
+function updateSelectCheckbox(){
+    const photo = likedPhotos[currentIndex];
+    const isSelected = selectedPhotos.some(selected => selected.id === photo.id);
+    selectCheckbox.checked = isSelected;
+}
+
+
+// 선택된 사진 토글 함수
+function toggleSelectPhoto() {
+    const photo = likedPhotos[currentIndex];
+    if (selectedPhotos.some(selected => selected.id === photo.id)) {
+        // 선택 목록에서 제거
+        selectedPhotos = selectedPhotos.filter(selected => selected.id !== photo.id);
+    } else {
+        // 선택 목록에 추가
+        selectedPhotos.push(photo);
+    }
+    // 로컬 스토리지에 저장
+    localStorage.setItem('selectedPhotos', JSON.stringify(selectedPhotos));
+}
+
 // 모달 외부 클릭 시 닫기
 modal.onclick = (event) => {
     if (event.target === modal) {
@@ -160,3 +197,22 @@ function showNextImage() {
 document.querySelector('.close').addEventListener('click', closeModal);
 document.querySelector('.prev').addEventListener('click', showPrevImage);
 document.querySelector('.next').addEventListener('click', showNextImage);
+
+// 키보드 이벤트로 모달 제어
+document.addEventListener('keydown', (event) => {
+    if (!modal.classList.contains('hidden')) { // 모달이 열려있는 경우
+        switch (event.key) {
+            case 'ArrowLeft':
+                showPrevImage();
+                break;
+            case 'ArrowRight':
+                showNextImage();
+                break;
+            case 'Escape':
+                closeModal();
+                break;
+            default:
+                break;
+        }
+    }
+});
