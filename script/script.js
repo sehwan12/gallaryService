@@ -1,6 +1,6 @@
 // script.js
 
-const apiKey = 'XZB6t3Awo2Ul_fGPYWCAJZ50u7-gcjlPa_MNSnD-vyw';  // 발급받은 Unsplash API 키로 교체하세요
+
 let photosArray = [];
 let currentIndex = 0;
 let likedPhotos = []; //좋아요한 사진 목록
@@ -24,22 +24,54 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }
 })
 
-// 이미지 데이터 가져오기
+// // 이미지 데이터 가져오기
+// async function getPhotos(query) {
+//     console.log("hi")
+//     const apiUrl = `https://api.unsplash.com/search/photos?client_id=${apiKey}&query=${query}&per_page=30`;
+//     try {
+//         const response = await fetch(apiUrl);
+//         const data = await response.json();
+//         photosArray = data.results;
+//         if(photosArray.length === 0){
+//             gallery.innerHTML='<p>검색 결과가 없습니다.</p>';
+//             closeModal();
+//         }else{
+//             displayPhotos();
+//         }  
+//     } catch (error) {
+//         console.error(error);
+//         closeModal();
+//     }
+// }
+
+// 이미지 데이터 가져오기 (서버 사이드 프록시 사용)
 async function getPhotos(query) {
-    console.log("hi")
-    const apiUrl = `https://api.unsplash.com/search/photos?client_id=${apiKey}&query=${query}&per_page=30`;
+    console.log("hi");
+    // const apiUrl = `/api/search-photos?query=${encodeURIComponent(query)}&per_page=30`;
+    const apiUrl = `http://localhost:3000/api/search-photos?query=${encodeURIComponent(query)}&per_page=30`; // 서버 포트로 변경
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API error:', errorData);
+            throw new Error(`API error! status: ${response.status}, message: ${errorData.error || 'Unknown error'}`);
+        }
+
         const data = await response.json();
         photosArray = data.results;
-        if(photosArray.length === 0){
-            gallery.innerHTML='<p>검색 결과가 없습니다.</p>';
+
+        if (photosArray.length === 0) {
+            gallery.innerHTML = '<p>검색 결과가 없습니다.</p>';
             closeModal();
-        }else{
+        } else {
             displayPhotos();
-        }  
+        }
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching photos:', error);
+        gallery.innerHTML = '<p>이미지를 불러오는 데 문제가 발생했습니다.</p>';
         closeModal();
     }
 }

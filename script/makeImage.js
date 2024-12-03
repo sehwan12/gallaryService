@@ -50,51 +50,105 @@ generateAIButton.addEventListener('click', () => {
     generateAIImage();
 });
 
-// AI 이미지 생성 함수 (Hugging Face의 Stable Diffusion API 사용)
+// // AI 이미지 생성 함수 (Hugging Face의 Stable Diffusion API 사용)
+// async function generateAIImage() {
+//     // 로딩 모달 표시
+//     loadingModal.classList.remove('hidden');
+
+//     // 선택된 사진들의 alt 텍스트를 기반으로 프롬프트 생성
+//     const prompts = selectedPhotos.map(photo => photo.alt || '이미지').join(', ');
+//     const promptText = `Create a cohesive and artistic image that combines the following elements: ${prompts}.`;
+
+//     console.log("Generated prompt for AI:", promptText);
+
+//     try {
+//         const response = await fetch('https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large', {
+//             method: 'POST',
+//             headers: {
+//                 'Authorization': `Bearer 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`, // 발급받은 API 키로 교체하세요
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 inputs: promptText
+//             })
+//         });
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(`API error! status: ${response.status}, message: ${errorData.error}`);
+//         }
+
+//         const blob = await response.blob();
+//         const imageUrl = URL.createObjectURL(blob);
+
+//         // 로딩 모달 숨김
+//         loadingModal.classList.add('hidden');
+
+//         // AI 이미지 모달에 표시
+//         displayAIImage(imageUrl);
+
+//         // AI 이미지 로컬 스토리지에 저장
+//         saveAIImage(imageUrl);
+//     } catch (error) {
+//         console.error('Error generating AI image:', error);
+//         alert('AI 이미지 생성 중 오류가 발생했습니다.');
+//         loadingModal.classList.add('hidden');
+//     }
+// }
+
+// AI 이미지 생성 함수 (서버 사이드 프록시 사용)
 async function generateAIImage() {
     // 로딩 모달 표시
     loadingModal.classList.remove('hidden');
 
-    // 선택된 사진들의 alt 텍스트를 기반으로 프롬프트 생성
+    // 선택된 사진들의 설명을 기반으로 프롬프트 생성
     const prompts = selectedPhotos.map(photo => photo.alt || '이미지').join(', ');
     const promptText = `Create a cohesive and artistic image that combines the following elements: ${prompts}.`;
 
     console.log("Generated prompt for AI:", promptText);
 
     try {
-        const response = await fetch('https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large', {
+        const apiUrl = `http://localhost:3000/api/generate-image`; 
+        const response = await fetch(apiUrl, 
+            {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer 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`, // 발급받은 API 키로 교체하세요
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                inputs: promptText
-            })
+            body: JSON.stringify({ prompt: promptText })
         });
+
+        console.log('API response status:', response.status);
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(`API error! status: ${response.status}, message: ${errorData.error}`);
+            console.error('API error:', errorData);
+            throw new Error(`API error! status: ${response.status}, message: ${errorData.error || 'Unknown error'}`);
         }
 
+        // 이미지 데이터를 Blob으로 받기
         const blob = await response.blob();
         const imageUrl = URL.createObjectURL(blob);
+        console.log('Generated Image URL:', imageUrl);
+
+        // 선택한 사진들의 alt_description 수집
+        const descriptions = selectedPhotos.map(photo => photo.alt_description || photo.description || '설명이 없습니다.');
 
         // 로딩 모달 숨김
         loadingModal.classList.add('hidden');
 
-        // AI 이미지 모달에 표시
-        displayAIImage(imageUrl);
+        // AI 이미지 모달에 표시 (descriptions 추가)
+        displayAIImage(imageUrl, descriptions);
 
         // AI 이미지 로컬 스토리지에 저장
         saveAIImage(imageUrl);
     } catch (error) {
         console.error('Error generating AI image:', error);
-        alert('AI 이미지 생성 중 오류가 발생했습니다.');
+        alert(`AI 이미지 생성 중 오류가 발생했습니다.\n${error.message}`);
         loadingModal.classList.add('hidden');
     }
 }
+
 
 // AI 이미지 표시 함수
 function displayAIImage(url) {
