@@ -82,6 +82,7 @@ app.get('/api/search-photos', async (req, res) => {
 
 // 정적 파일 서빙 설정 (API 라우트보다 나중에 설정)
 app.use(express.static(path.join(__dirname, '../page')));
+app.use('/', express.static(path.join(__dirname)));
 
 // 모든 GET 요청에 대해 클라이언트의 index.html 반환
 app.get('*', (req, res) => {
