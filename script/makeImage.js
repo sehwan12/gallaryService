@@ -108,7 +108,8 @@ async function generateAIImage() {
     console.log("Generated prompt for AI:", promptText);
 
     try {
-        const apiUrl = `http://localhost:3000/api/generate-image`; 
+        //const apiUrl = `http://localhost:3000/api/generate-image`; 
+        const apiUrl = `https://photowiz.onrender.com/api/generate-image`;
         const response = await fetch(apiUrl, 
             {
             method: 'POST',
