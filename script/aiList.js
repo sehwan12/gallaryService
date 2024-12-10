@@ -52,6 +52,15 @@ function displayAIImages() {
         aiGallery.appendChild(imgContainer);
     });
 
+    // 이미지 로드 실패 시 처리
+    img.addEventListener('error', () => {
+        console.error(`이미지 로드 실패: ${aiImage.url}`);
+        // 해당 이미지를 리스트에서 제거
+        aiImages.splice(index, 1);
+        localStorage.setItem('aiImages', JSON.stringify(aiImages));
+        displayAIImages();  // 갤러리 다시 렌더링
+    });
+
     if (aiImages.length === 0) {
         aiGallery.innerHTML = '<p>생성된 AI 이미지가 없습니다.</p>';
     }

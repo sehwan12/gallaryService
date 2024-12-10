@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 async function getPhotos(query) {
     console.log("hi");
     const apiUrl = `/api/search-photos?query=${encodeURIComponent(query)}&per_page=30`;
-    //const apiUrl = `http://localhost:3000/api/search-photos?query=${encodeURIComponent(query)}&per_page=30`; // 서버 포트로 변경
-    //const apiUrl = `https://photowiz.onrender.com/api/search-photos`;
     try {
         const response = await fetch(apiUrl, {
             method: 'GET',
