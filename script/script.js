@@ -24,25 +24,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }
 })
 
-// // 이미지 데이터 가져오기
-// async function getPhotos(query) {
-//     console.log("hi")
-//     const apiUrl = `https://api.unsplash.com/search/photos?client_id=${apiKey}&query=${query}&per_page=30`;
-//     try {
-//         const response = await fetch(apiUrl);
-//         const data = await response.json();
-//         photosArray = data.results;
-//         if(photosArray.length === 0){
-//             gallery.innerHTML='<p>검색 결과가 없습니다.</p>';
-//             closeModal();
-//         }else{
-//             displayPhotos();
-//         }  
-//     } catch (error) {
-//         console.error(error);
-//         closeModal();
-//     }
-// }
 
 // 이미지 데이터 가져오기 (서버 사이드 프록시 사용)
 async function getPhotos(query) {
