@@ -34,6 +34,15 @@ function displayAIImages() {
         img.tabIndex = 0;  // 키보드 포커스 가능하도록 설정
         img.setAttribute('aria-label', 'AI 생성 이미지 확대 보기');
 
+        // 이미지 로드 실패 시 처리
+        img.addEventListener('error', () => {
+            console.error(`이미지 로드 실패: ${aiImage.url}`);
+            // 해당 이미지를 리스트에서 제거
+            aiImages.splice(index, 1);
+            localStorage.setItem('aiImages', JSON.stringify(aiImages));
+            displayAIImages();  // 갤러리 다시 렌더링
+        });
+        
         // 이미지 클릭 이벤트
         img.addEventListener('click', () => {
             openAIModal(index);
@@ -50,15 +59,6 @@ function displayAIImages() {
 
         imgContainer.appendChild(img);
         aiGallery.appendChild(imgContainer);
-    });
-
-    // 이미지 로드 실패 시 처리
-    img.addEventListener('error', () => {
-        console.error(`이미지 로드 실패: ${aiImage.url}`);
-        // 해당 이미지를 리스트에서 제거
-        aiImages.splice(index, 1);
-        localStorage.setItem('aiImages', JSON.stringify(aiImages));
-        displayAIImages();  // 갤러리 다시 렌더링
     });
 
     if (aiImages.length === 0) {
