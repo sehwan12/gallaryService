@@ -96,6 +96,8 @@ async function generateAIImage() {
 
         // AI 이미지 로컬 스토리지에 저장
         saveAIImage(imageUrl);
+
+        selectedPhotos= [];
     } catch (error) {
         console.error('Error generating AI image:', error);
         alert(`AI 이미지 생성 중 오류가 발생했습니다.\n${error.message}`);
